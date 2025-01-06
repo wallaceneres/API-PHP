@@ -6,7 +6,7 @@ echo '<p>Aplicação</p><hr>';
 
 for($i=0; $i<10; $i++)
 {
-    $resultado = api_request('random');
+    $resultado = api_request('random&min=10&max=5');
 
     // verify if response is ok (success)
 

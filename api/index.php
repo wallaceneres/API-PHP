@@ -11,11 +11,31 @@ if(isset($_GET['option']))
     switch ($_GET['option'])
     {
         case 'status':
-            define_response($data, 'API running OK!!!...');
+            define_response($data, 'API running OK!');
             break;
 
         case 'random':
-            define_response($data, rand(0,1000));
+
+            $min = 0;
+            $max = 1000;
+
+            if(isset($_GET['min']))
+            {
+                $min = intval($_GET['min']);
+            }
+
+            if(isset($_GET['max']))
+            {
+                $max = intval($_GET['max']);
+            }
+
+            if($min >= $max)
+            {
+                response($data);
+                return;
+            }
+
+            define_response($data, rand($min,$max));
             break;
     }
 
