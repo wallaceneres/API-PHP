@@ -2,22 +2,10 @@
 
 define('API_BASE', 'http://127.0.0.1/api/?option=');
 
-echo '<p>Aplicação</p><hr>';
+echo '<p>Aplicação</p>';
 
-for($i=0; $i<10; $i++)
-{
-    $resultado = api_request('random&min=10&max=5');
-
-    // verify if response is ok (success)
-
-    if($resultado['status'] == 'ERROR')
-    {
-        die('Aconteceu um erro a minha chamada à API');
-    }
-
-    echo "O valor randomico: " . $resultado['data'] . "<br>";
-}
-
+echo '<pre>';
+print_r(api_request('hash'));
 
 echo "TERMINADO";
 

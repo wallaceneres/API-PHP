@@ -1,8 +1,12 @@
 <?php
     
+//import output.php
+
+require_once('output.php');
+
 //prepare response    
 $data['status'] = 'ERROR';
-$data['data'] = null;
+$data['data'] = [];
 
 //request
 if(isset($_GET['option']))
@@ -11,31 +15,15 @@ if(isset($_GET['option']))
     switch ($_GET['option'])
     {
         case 'status':
-            define_response($data, 'API running OK!');
+            api_status($data);
             break;
 
         case 'random':
+            api_random($data);
+            break;
 
-            $min = 0;
-            $max = 1000;
-
-            if(isset($_GET['min']))
-            {
-                $min = intval($_GET['min']);
-            }
-
-            if(isset($_GET['max']))
-            {
-                $max = intval($_GET['max']);
-            }
-
-            if($min >= $max)
-            {
-                response($data);
-                return;
-            }
-
-            define_response($data, rand($min,$max));
+        case 'hash':
+            api_hash($data);
             break;
     }
 
@@ -45,18 +33,4 @@ if(isset($_GET['option']))
 
 response($data);
 
-
-function define_response(&$data, $value)
-{
-    $data['status'] = 'SUCCESS';
-    $data['data'] = $value;
-}
-
-//construcao da response
-
-function response($data_response)
-{
-    header("Content-Type:application/json");
-    echo json_encode($data_response);
-}
 ?>
