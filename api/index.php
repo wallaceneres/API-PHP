@@ -1,36 +1,13 @@
 <?php
     
-//import output.php
+//resposta temporaria
 
-require_once('output.php');
+header('Content-Type:application/json');
 
-//prepare response    
-$data['status'] = 'ERROR';
-$data['data'] = [];
+$data['status'] = 'SUCCESS';
+$data['method'] = $_SERVER['REQUEST_METHOD'];
 
-//request
-if(isset($_GET['option']))
-{
+// apresentar as variaveis que vieram no pedido (get ou post)
 
-    switch ($_GET['option'])
-    {
-        case 'status':
-            api_status($data);
-            break;
 
-        case 'random':
-            api_random($data);
-            break;
-
-        case 'hash':
-            api_hash($data);
-            break;
-    }
-
-}
-
-// emitir a resposta da API
-
-response($data);
-
-?>
+echo json_encode($data);
