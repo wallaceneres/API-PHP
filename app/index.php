@@ -10,4 +10,8 @@ $variables =
     'apelido' => 'Neres'
 ];
 
-api_request('status', 'GET', $variables);
+$results = api_request('status', 'GET', $variables);
+
+echo '<pre>';
+
+print_r ($results);
