@@ -43,8 +43,13 @@ class api_response
     public function api_request_error($message = '')
     {
         //output an api error message
-        $this->data['status'] = 'ERROR';
-        $this->data['error_message'] = $message;
+
+        $data_error = [
+            'status' => 'ERROR',
+            'message' => $message
+        ];
+
+        $this->data['data'] = $data_error;
         $this->send_response();
     }
 
