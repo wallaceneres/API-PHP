@@ -9,6 +9,26 @@ require_once(dirname(__FILE__) . '/inc/api_class.php');
 
 $api = new api_class();
 
+// check if method is valid
+
+if(!$api->check_method($_SERVER['REQUEST_METHOD']))
+{
+    //send error response
+    $api->api_request_error('Invalid request method.');
+}
+
+//set request method
+
+$api->set_method($_SERVER['REQUEST_METHOD']);
+
+if($api->get_method() == 'GET')
+{
+    $api->set_endpoint($_GET['endpoint']);
+}elseif($api->get_method() == 'POST')
+{
+    $api->set_endpoint($_POST['endpoint']);
+}
+
 $api->send_api_status();
 
 
@@ -20,8 +40,6 @@ $api->send_api_status();
 // };
 
 echo 'OK';
-
-
     
 // //resposta temporaria
 

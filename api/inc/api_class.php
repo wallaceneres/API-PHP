@@ -22,6 +22,18 @@ class api_class
         $this->data['method'] = $method;
     }
 
+    public function get_method()
+    {
+        //returns the request method
+        return $this->data['method'];
+    }
+
+    public function set_endpoint($endpoint)
+    {   
+        // set the request endpoint
+        $this->data['endpoint'] = $endpoint;
+    }
+
     public function api_request_error($message = '')
     {
         //output an api error message
