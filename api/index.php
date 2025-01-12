@@ -5,6 +5,7 @@
 require_once(dirname(__FILE__) . '/inc/config.php');
 require_once(dirname(__FILE__) . '/inc/api_response.php');
 require_once(dirname(__FILE__) . '/inc/api_logic.php');
+require_once(dirname(__FILE__) . '/inc/database.php');
 
 //instanciate the api_classe
 
@@ -24,9 +25,11 @@ $api_response->set_method($_SERVER['REQUEST_METHOD']);
 
 $params = null;
 
+$endpoint = isset($_GET['endpoint']) && !empty($_GET['endpoint']) ? $_GET['endpoint'] : 'default';
+
 if($api_response->get_method() == 'GET')
 {
-    $api_response->set_endpoint($_GET['endpoint']);
+    $api_response->set_endpoint($endpoint);
     $params = $_GET;
 }elseif($api_response->get_method() == 'POST')
 {

@@ -31,19 +31,44 @@ class api_logic
         
 
     public function get_all_clients()
+
+    //returns all clients from our database
     {
+
+        $sql = "SELECT * FROM clientes WHERE 1 ";
+
+        //check if only_active exist and is true
+
+        if(key_exists('only_active', $this->params))
+        {
+            if(filter_var($this->params['only_active'], FILTER_VALIDATE_BOOLEAN) == true)
+            {
+                $sql .= "AND deleted_at IS NULL";
+            }
+        }
+
+        $db = new database();
+
+        $results = $db->EXE_QUERY($sql);
+
         return [
             'status' => 'SUCCESS',
             'message' => '',
-            'results' => [
-                'joao','ana','pedro','antonio'
-            ]
+            'results' => $results
         ];
     }
 
     public function get_all_products()
     {
 
-    }
+        $db = new database();
 
+        $results = $db->EXE_QUERY("SELECT * FROM produtos");
+
+        return [
+            'status' => 'SUCCESS',
+            'message' => '',
+            'results' => $results
+        ];
+    }
 }
