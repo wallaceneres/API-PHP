@@ -15,9 +15,9 @@ echo '<pre>';
 // $results = api_request('get_all_products', 'GET');
 // print_r ($results);
 
-echo '<h3>CLIENTES</h3>';
+echo '<h3>CLIENTES TODOS  </h3>';
 
-$results = api_request('get_all_clients', 'GET', ['only_active' => true]);
+$results = api_request('get_all_clients', 'GET');
 
 foreach($results['data']['results'] as $client)
 {
@@ -25,6 +25,30 @@ foreach($results['data']['results'] as $client)
 }
 
 echo '<hr>';
+
+echo '<h3>CLIENTES INATIVOS</h3>';
+
+$results = api_request('get_all_inactive_clients', 'GET');
+
+foreach($results['data']['results'] as $client)
+{
+    echo $client['nome'] . ' - ' . $client['email'] . '<br>';
+}
+
+echo '<hr>';
+
+echo '<h3>CLIENTES ATIVOS</h3>';
+
+$results = api_request('get_all_active_clients', 'GET');
+
+foreach($results['data']['results'] as $client)
+{
+    echo $client['nome'] . ' - ' . $client['email'] . '<br>';
+}
+
+echo '<hr>';
+
+
 
 echo '<h3>PRODUTOS</h3>';
 
