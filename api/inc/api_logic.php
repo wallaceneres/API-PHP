@@ -39,35 +39,8 @@ class api_logic
             'results' => null
         ];
     }
-        
 
-    // public function get_all_clients()
-
-    // //returns all clients from our database, active or inactive
-    // {
-
-    //     $sql = "SELECT * FROM clientes WHERE 1 ";
-
-    //     //check if only_active exist and is true
-
-    //     if(key_exists('only_active', $this->params))
-    //     {
-    //         if(filter_var($this->params['only_active'], FILTER_VALIDATE_BOOLEAN) == true)
-    //         {
-    //             $sql .= "AND deleted_at IS NULL";
-    //         }
-    //     }
-
-    //     $db = new database();
-
-    //     $results = $db->EXE_QUERY($sql);
-
-    //     return [
-    //         'status' => 'SUCCESS',
-    //         'message' => '',
-    //         'results' => $results
-    //     ];
-    // }
+    //CLIENTES
 
     public function get_all_clients()
     {
@@ -140,6 +113,8 @@ class api_logic
             'results' => $results
         ];
     }
+
+    //PRODUTOS
     
     public function get_all_products()
     {
@@ -154,4 +129,47 @@ class api_logic
             'results' => $results
         ];
     }
+
+    public function get_all_active_products()
+    {
+
+        $db = new database();
+
+        $results = $db->EXE_QUERY("SELECT * FROM produtos where deleted_at is null");
+
+        return [
+            'status' => 'SUCCESS',
+            'message' => '',
+            'results' => $results
+        ];
+    }
+
+    public function get_all_inactive_products()
+    {
+
+        $db = new database();
+
+        $results = $db->EXE_QUERY("SELECT * FROM produtos where deleted_at is not null");
+
+        return [
+            'status' => 'SUCCESS',
+            'message' => '',
+            'results' => $results
+        ];
+    }
+
+    public function get_all_products_without_stock()
+    {
+        //returns all products with stock <= 0 in the database
+        $db = new database();
+
+        $results = $db->EXE_QUERY("SELECT * FROM produtos WHERE deleted_at IS NULL AND quantidade <=0");
+
+        return [
+            'status' => 'SUCCESS',
+            'message' => '',
+            'results' => $results
+        ];
+    }
+
 }
