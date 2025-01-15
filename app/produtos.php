@@ -23,7 +23,7 @@ require_once('inc/api_functions.php');
     <section class="container">
         <div class="row">
             <div class="col">
-                <h1>Clientes</h1>
+                <h1>Produtos</h1>
                 <hr>
                 <table>
                     <thead>
