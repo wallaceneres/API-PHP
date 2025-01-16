@@ -172,4 +172,32 @@ class api_logic
         ];
     }
 
+    public function create_new_client()
+    {
+
+        $params = [
+            ':nome' => $this->params['nome'],
+            ':email' => $this->params['email'],
+            ':telefone' => $this->params['telefone']
+        ];
+
+        $db = new database();
+
+        $db->EXE_QUERY("INSERT INTO clientes VALUES(
+                0,
+                :nome,
+                :email,
+                :telefone,
+                NOW(),
+                NOW(),
+                NULL
+            )", $params);
+
+        return [
+            'status' => 'SUCCESS',
+            'message' => 'Novo cliente adicionado com sucesso.',
+            'results' => []
+        ];
+    }
+
 }

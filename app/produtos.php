@@ -47,14 +47,14 @@ if($results['data']['status'] == 'SUCCESS')
                 <?php if(count($produtos) == 0):?>
                     <p class ="text-center">Não existem clientes registrados.</p>
                 <?php else :?>
-                <table class ="table">
+                <table class ="table table-striped table-bordered">
                     <thead class="table-dark">
                         <tr>
                             <th width="50%">Produto</th>
                             <th width="50%" class="text-end">Quantidade</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="table-striped-columns">
                         <?php foreach($produtos as $produto): ?>
                             <tr>
                                 <td><?= $produto['produto']?></td>
