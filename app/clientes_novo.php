@@ -5,6 +5,9 @@ require_once('inc/config.php');
 require_once('inc/api_functions.php');
 require_once('inc/functions.php');
 
+    $error_message = '';
+    $success_message = '';
+
 //lógica e regras de negocio
 
 if($_SERVER['REQUEST_METHOD'] == 'POST'){
@@ -18,7 +21,15 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
         'telefone' => $telefone
     ]);
 
-    printData($results);
+    //apresenta o resultado da operacao an API
+
+    if($results['data']['status'] == 'ERROR')
+    {
+        $error_message = $results['data']['message'];
+    }else if($results['data']['status'] == 'SUCCESS')
+    {
+        $success_message = $results['data']['message'];
+    }
 }
 
 ?>
@@ -61,6 +72,18 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
                         <a href="clientes.php" class="btn btn-secondary btn-sm">Cancelar</a>
                         <input type="submit" value="Salvar" class="btn btn-primary btn-sm">
                     </div>
+
+                    <?php if(!empty($error_message)) : ?>
+                        <div class="alert alert-danger p-2 text-center">
+                            <?=$error_message?>
+                        </div>
+                    <?php elseif(!empty($success_message)) : ?>
+                        <div class="alert alert-success p-2 text-center">
+                            <?=$success_message?>
+                        </div>
+                    <?php endif;?>
+
+
 
                 </form>
 
