@@ -206,15 +206,6 @@ class api_logic
             ':telefone' => $this->params['telefone']
         ];
 
-        /*
-        verifica se todos os dados estão presentes
-        verifica se o cliente ja existe
-            - mesmo nome
-            - mesmo email
-        guardar os dados na base de dados
-        */
-
-
         $db->EXE_QUERY("INSERT INTO clientes VALUES(
                 0,
                 :nome,
@@ -232,4 +223,51 @@ class api_logic
         ];
     }
 
+    public function create_new_product()
+    {
+
+        //check if all data is avaliable
+
+        if(!isset($this->params['produto']) || !isset($this->params['quantidade']))
+        {
+            return $this->error_response('Insufficient product data');
+        }
+
+        //check if there is already another product witch the same name
+        $db = new database();
+        
+        $params = [
+            ':produto' => $this->params['produto']
+        ];
+
+        $results = $db->EXE_QUERY("SELECT id_produto FROM produtos
+            WHERE produto = :produto
+            ", $params);
+
+        if(count($results) != 0)
+        {
+            return $this->error_response('Theres already another product with the same name');
+        }
+
+        // add new to product to the database
+        $params = [
+            ':produto' => $this->params['produto'],
+            ':quantidade' => $this->params['quantidade']
+        ];
+
+        $db->EXE_QUERY("INSERT INTO produtos VALUES(
+                0,
+                :produto,
+                :quantidade,
+                NOW(),
+                NOW(),
+                NULL
+            )", $params);
+
+        return [
+            'status' => 'SUCCESS',
+            'message' => 'New product added with success.',
+            'results' => []
+        ];
+    }
 }
