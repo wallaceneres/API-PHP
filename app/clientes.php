@@ -6,7 +6,7 @@ require_once('inc/api_functions.php');
 require_once('inc/functions.php');
 
 //lógica e regras de negocio
-$results = api_request('get_all_clients', 'GET');
+$results = api_request('get_all_active_clients', 'GET');
 
 //analisar a informacao obtida
 if($results['data']['status'] == 'SUCCESS')
@@ -41,7 +41,11 @@ if($results['data']['status'] == 'SUCCESS')
                         <a href="clientes_novo.php" class = "btn btn-primary btn-sm">Adicionar cliente</a>
                     </div>
                 </div>
-
+                <?php if(isset($_GET['success']) && $_GET['success'] == 'true') : ?>
+                    <div class="alert alert-success p-2 text-center">
+                        <p>Cliente excluido com sucesso!</p>
+                    </div>
+                <?php endif; ?>
                 <?php if(count($clientes) == 0):?>
                     <p class ="text-center">Não existem clientes registrados.</p>
                 <?php else :?>

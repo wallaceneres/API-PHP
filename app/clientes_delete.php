@@ -42,7 +42,7 @@ if(empty($cliente)){
 }
 
 api_request('delete_client', 'GET', ['id' => $id_cliente]);
-    header("Location: clientes.php");
+    header("Location: clientes.php?success=true");
     exit;
 
 ?>

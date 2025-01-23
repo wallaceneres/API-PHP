@@ -191,7 +191,9 @@ class api_logic
         ];
 
         $results = $db->EXE_QUERY("SELECT id_cliente FROM clientes
-            WHERE nome = :nome OR email = :email
+            WHERE 1
+            AND (nome = :nome OR email = :email)
+            AND deleted_at iS NULL
             ", $params);
 
         if(count($results) != 0)
@@ -222,6 +224,36 @@ class api_logic
             'results' => []
         ];
     }
+    
+    public function get_product()
+    {
+        //returns of all data from a certain product
+
+        $sql = "SELECT * FROM PRODUTOS WHERE 1 ";
+
+        //check if id exists
+
+        if(key_exists('id', $this->params) && $this->params['id'] != null)
+        {
+            if(filter_var($this->params['id'], FILTER_VALIDATE_INT))
+            {
+                $sql .= "AND id_produto = " . intval($this->params['id']);
+            }
+        }else
+        {
+            return $this->error_response('ID product not specified');
+        }
+
+        $db = new database();
+
+        $results = $db->EXE_QUERY("$sql");
+
+        return [
+            'status' => 'SUCCESS',
+            'message' => '',
+            'results' => $results
+        ];
+    }
 
     public function delete_client()
     {
@@ -240,11 +272,37 @@ class api_logic
             ':id_cliente' => $this->params['id']
         ];
 
-        $db->EXE_NON_QUERY("DELETE FROM CLIENTES WHERE id_cliente = :id_cliente", $params);
+        $db->EXE_NON_QUERY("UPDATE CLIENTES SET deleted_at = now() WHERE id_cliente = :id_cliente", $params);
 
         return [
             'status' => 'SUCCESS',
             'message' => 'Client deleted with success.',
+            'results' => []
+        ];
+    }
+
+    public function delete_product()
+    {
+
+        //check if all data is avaliable
+
+        if(!isset($this->params['id']))
+        {
+            return $this->error_response('Insufficient product data');
+        }
+
+        //delete product
+        $db = new database();
+        
+        $params = [
+            ':id_produto' => $this->params['id']
+        ];
+
+        $db->EXE_NON_QUERY("UPDATE PRODUTOS SET deleted_at = now() WHERE id_produto = :id_produto", $params);
+
+        return [
+            'status' => 'SUCCESS',
+            'message' => 'Product deleted with success.',
             'results' => []
         ];
     }
