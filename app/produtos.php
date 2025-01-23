@@ -27,7 +27,6 @@ if($results['data']['status'] == 'SUCCESS')
     <link rel="stylesheet" href="assets/bootstrap/bootstrap.min.css">
 </head>
 <body>
-    <script src="assets/bootstrap/bootstrap.bundle.js"></script>
 
     <?php include "inc/nav.php"?>
 
@@ -71,5 +70,6 @@ if($results['data']['status'] == 'SUCCESS')
             </div>
         </div>
     </section>
+    <script src="assets/bootstrap/bootstrap.bundle.js"></script>
 </body>
 </html>

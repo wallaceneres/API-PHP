@@ -223,6 +223,32 @@ class api_logic
         ];
     }
 
+    public function delete_client()
+    {
+
+        //check if all data is avaliable
+
+        if(!isset($this->params['id']))
+        {
+            return $this->error_response('Insufficient client data');
+        }
+
+        //hard delete client
+        $db = new database();
+        
+        $params = [
+            ':id_cliente' => $this->params['id']
+        ];
+
+        $db->EXE_NON_QUERY("DELETE FROM CLIENTES WHERE id_cliente = :id_cliente", $params);
+
+        return [
+            'status' => 'SUCCESS',
+            'message' => 'Client deleted with success.',
+            'results' => []
+        ];
+    }
+
     public function create_new_product()
     {
 
