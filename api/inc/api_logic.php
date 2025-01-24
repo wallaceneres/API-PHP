@@ -177,7 +177,7 @@ class api_logic
 
         //check if all data is avaliable
 
-        if(!isset($this->params['nome']) || !isset($this->params['email']) || !isset($this->params['nome']))
+        if(!isset($this->params['nome']) || !isset($this->params['email']) || !isset($this->params['telefone']))
         {
             return $this->error_response('Insufficient client data');
         }
@@ -208,7 +208,7 @@ class api_logic
             ':telefone' => $this->params['telefone']
         ];
 
-        $db->EXE_QUERY("INSERT INTO clientes VALUES(
+        $db->EXE_NON_QUERY("INSERT INTO clientes VALUES(
                 0,
                 :nome,
                 :email,
@@ -339,7 +339,7 @@ class api_logic
             ':quantidade' => $this->params['quantidade']
         ];
 
-        $db->EXE_QUERY("INSERT INTO produtos VALUES(
+        $db->EXE_NON_QUERY("INSERT INTO produtos VALUES(
                 0,
                 :produto,
                 :quantidade,

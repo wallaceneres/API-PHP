@@ -41,10 +41,22 @@ if($results['data']['status'] == 'SUCCESS')
                         <a href="clientes_novo.php" class = "btn btn-primary btn-sm">Adicionar cliente</a>
                     </div>
                 </div>
-                <?php if(isset($_GET['success']) && $_GET['success'] == 'true') : ?>
-                    <div class="alert alert-success p-2 text-center">
-                        <p>Cliente excluido com sucesso!</p>
+                <div id="successToast" class="toast align-items-center text-bg-success border-0 position-fixed top-0 end-0 p-3 m-3" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            Cliente excluído com sucesso!
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
                     </div>
+                </div>
+                <?php if (isset($_GET['success']) && $_GET['success'] == 'true') : ?>
+                    <script>
+                        // Esse código irá mostrar o toast assim que a página carregar
+                        window.onload = function() {
+                            var toast = new bootstrap.Toast(document.getElementById('successToast'));
+                            toast.show();
+                        };
+                    </script>
                 <?php endif; ?>
                 <?php if(count($clientes) == 0):?>
                     <p class ="text-center">Não existem clientes registrados.</p>
