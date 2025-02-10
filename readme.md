@@ -94,54 +94,51 @@ Acesse 127.0.0.1 ou localhost no seu navegador para testar a aplicação.
   - Retorna apenas os clientes que estão ativos na base de dados.
     
     ```
-    - ```
-      {
-        "method": "GET",
-        "endpoint": "get_all_clients",
-        "data": {
-          "status": "SUCCESS",
-          "message": "",
-          "results": [
-            {
-              "id_cliente": "1",
-              "nome": "Teste",
-              "email": "teste@sistema.com.br",
-              "telefone": "31912345678",
-              "created_at": "2025-01-23 18:39:30",
-              "updated_at": "2025-01-23 18:39:30",
-              "deleted_at": null
-            }
-          ]
-        }
+    {
+      "method": "GET",
+      "endpoint": "get_all_clients",
+      "data": {
+        "status": "SUCCESS",
+        "message": "",
+        "results": [
+          {
+            "id_cliente": "1",
+            "nome": "Teste",
+            "email": "teste@sistema.com.br",
+            "telefone": "31912345678",
+            "created_at": "2025-01-23 18:39:30",
+            "updated_at": "2025-01-23 18:39:30",
+            "deleted_at": null
+          }
+        ]
       }
-      ```
+    }
     ```
 
 - **GET** `/index.php?endpoing=get_all_inactive_clients`
   
   - Retorna apenas os clientes que estão inativos(excluidos via softdelete) na base de dados.
-  - ```
-    - ```
-      {
-        "method": "GET",
-        "endpoint": "get_all_clients",
-        "data": {
-          "status": "SUCCESS",
-          "message": "",
-          "results": [
-            {
-              "id_cliente": "2",
-              "nome": "Teste 2",
-              "email": "teste2@sistema.com.br",
-              "telefone": "31923456789",
-              "created_at": "2025-01-23 19:13:41",
-              "updated_at": "2025-01-23 19:13:41",
-              "deleted_at": "2025-01-24 14:26:13"
-            }
-          ]
-        }
+    
+    ```
+    {
+      "method": "GET",
+      "endpoint": "get_all_clients",
+      "data": {
+        "status": "SUCCESS",
+        "message": "",
+        "results": [
+          {
+            "id_cliente": "2",
+            "nome": "Teste 2",
+            "email": "teste2@sistema.com.br",
+            "telefone": "31923456789",
+            "created_at": "2025-01-23 19:13:41",
+            "updated_at": "2025-01-23 19:13:41",
+            "deleted_at": "2025-01-24 14:26:13"
+          }
+        ]
       }
-      ```
+    }
     ```
 
 - **GET** `/index.php?endpoint=get_client&id={id}`
@@ -157,13 +154,13 @@ Acesse 127.0.0.1 ou localhost no seu navegador para testar a aplicação.
         "message": "",
         "results": [
           {
-            "id_cliente": "38",
-            "nome": "Wallace",
-            "email": "wallace.teste@sistema.com.br",
-            "telefone": "31997243345",
+            "id_cliente": "1",
+            "nome": "Teste",
+            "email": "teste@sistema.com.br",
+            "telefone": "31912345678",
             "created_at": "2025-01-23 18:39:30",
             "updated_at": "2025-01-23 18:39:30",
-            "deleted_at": "2025-01-24 14:26:06"
+            "deleted_at": null
           }
         ]
       }
@@ -183,10 +180,5 @@ Acesse 127.0.0.1 ou localhost no seu navegador para testar a aplicação.
       }
     }
     ```
-  - 
-
-- **DELETE** `/users/{id}`
-  
-  - Remove um usuário.
 
 

@@ -16,6 +16,28 @@ class api_response
         return in_array($method, $this->avaliable_methods);
     }
 
+    public function isUserAuthorized($user, $password)
+    {
+
+        if (empty($user) || empty($password)) {
+            return false;
+        }
+
+        $db = new database();
+
+        $params = [
+            'username' => $user
+        ];
+
+        $results = $db->EXE_QUERY("SELECT username, password from usersapi where username = :username", $params);
+
+        if ($results[0]['username'] == $user && $results[0]['password'] == $password) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public function set_method($method)
     {
         //set the response method
@@ -74,4 +96,6 @@ class api_response
         //add new key to data
         $this->data[$key] = $value;
     }
+
+    
 }

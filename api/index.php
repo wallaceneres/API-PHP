@@ -11,6 +11,14 @@ require_once(dirname(__FILE__) . '/inc/database.php');
 
 $api_response = new api_response();
 
+$user = $_SERVER['PHP_AUTH_USER'];
+$password = $_SERVER['PHP_AUTH_PW'];
+
+if(!$api_response->isUserAuthorized($user, $password))
+{
+    $api_response->api_request_error('User not Authorized');
+}
+
 // check if method is valid
 
 if(!$api_response->check_method($_SERVER['REQUEST_METHOD']))
@@ -37,7 +45,7 @@ if($api_response->get_method() == 'GET')
     $params = $_POST;
 }
 
-$api_logic = new api_logic($api_response->get_endpoint(), $params);
+$api_logic = new api_logic($api_response->get_endpoint(),   );
 
 //check if endpoint exists
 if(!$api_logic->endpoint_exists())

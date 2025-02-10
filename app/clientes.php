@@ -5,17 +5,29 @@ require_once('inc/config.php');
 require_once('inc/api_functions.php');
 require_once('inc/functions.php');
 
-//lógica e regras de negocio
-$results = api_request('get_all_active_clients', 'GET');
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$limit = isset($_GET['limit']) && $_GET['limit'] > 0 ? (int)$_GET['limit'] : 10;
 
+//lógica e regras de negocio
+$results = api_request('get_all_clients', 'GET',[
+    'page' => $page,
+    'limit' => $limit
+]);
+
+// var_dump($page);
+// die(1);
 //analisar a informacao obtida
 if($results['data']['status'] == 'SUCCESS')
 {
     $clientes = $results['data']['results'];
+    $totalClients = $results['data']['total'];
 }else
 {
     $clientes = [];
+    $totalClients = 0;
 }
+
+$totalPages = ceil($totalClients / $limit);
 ?>
 
 <!DOCTYPE html>
@@ -25,6 +37,7 @@ if($results['data']['status'] == 'SUCCESS')
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>App Consumidora - Clientes</title>
     <link rel="stylesheet" href="assets/bootstrap/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 <body>
     <?php include "inc/nav.php"?>
@@ -61,6 +74,21 @@ if($results['data']['status'] == 'SUCCESS')
                 <?php if(count($clientes) == 0):?>
                     <p class ="text-center">Não existem clientes registrados.</p>
                 <?php else :?>
+                    <form action="" method="GET" class="mb-3">
+                        <div class="row">
+                            <div class="col-auto">
+                                <label for="limit" class="form-label">Resultados por página:</label>
+                            </div>
+                            <div class="col-auto">
+                                <select id="limit" name="limit" class="form-select" onchange="this.form.submit()">
+                                    <option value="10" <?= (isset($_GET['limit']) && $_GET['limit'] == 10) ? 'selected' : ''; ?>>10</option>
+                                    <option value="25" <?= (isset($_GET['limit']) && $_GET['limit'] == 25) ? 'selected' : ''; ?>>25</option>
+                                    <option value="50" <?= (isset($_GET['limit']) && $_GET['limit'] == 50) ? 'selected' : ''; ?>>50</option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+
                 <table class ="table table-striped table-bordered">
                     <thead class="table-dark">
                         <tr>
@@ -76,37 +104,80 @@ if($results['data']['status'] == 'SUCCESS')
                                 <td><?= $cliente['nome']?></td>
                                 <td><?= $cliente['email']?></td>
                                 <td><?= $cliente['telefone']?></td>
+                                
                                 <td class="d-flex justify-content-center">
-                                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Deletar</button>
-                                    <!-- Modal -->
-                                    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Excluir Usuário?</h1>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            Deseja realmente excluir o usuário <?=$cliente['nome']?> ?
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                            <a href="clientes_delete.php?id=<?=$cliente['id_cliente']?>" class="btn btn-danger">Excluir</a>
-                                        </div>
-                                        </div>
+                                    <div class="btn-group" role="group" aria-label="Basic example">
+                                        <a href="clientes_edit.php?id=<?=$cliente['id_cliente']?>" class="btn btn-primary bi bi-pencil-square" title="Editar"></a>
+                                        <button type="button" class="btn btn-danger bi bi-trash" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-id="<?= $cliente['id_cliente'] ?>" title="Excluir"></button>
                                     </div>
-                                    </div> 
                                 </td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
                 </table>
 
-                <p class="text-end">Total: <strong><?= count($clientes) ?></strong></p>
+                <p class="text-end">Total: <strong><?= $totalClients ?></strong></p>
+
+                <!-- Navegação de Paginação -->
+                <nav aria-label="Navegação de páginas">
+                    <ul class="pagination justify-content-center">
+                        <!-- Página Anterior -->
+                        <li class="page-item <?= $page <= 1 ? 'disabled' : '' ?>">
+                            <a class="page-link" href="?page=<?= $page - 1 ?>" tabindex="-1">Anterior</a>
+                        </li>
+
+                        <!-- Páginas -->
+                        <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                            <li class="page-item <?= $i == $page ? 'active' : '' ?>">
+                                <a class="page-link" href="?page=<?= $i ?>&limit=<?= isset($_GET['limit']) ? $_GET['limit'] : 10 ?>"><?= $i ?></a>
+                            </li>
+                        <?php endfor; ?>
+
+                        <!-- Próxima Página -->
+                        <li class="page-item <?= $page >= $totalPages ? 'disabled' : '' ?>">
+                            <a class="page-link" href="?page=<?= $page + 1 ?>">Próxima</a>
+                        </li>
+                    </ul>
+                </nav>
                 <?php endif ?>
             </div>
         </div>
-    </section>      
+
+
+        <!-- Modal -->
+        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Excluir Usuário?</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Deseja realmente excluir o usuário <?=$cliente['nome']?> ?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <a href="clientes_delete.php?id=<?=$cliente['id_cliente']?>" class="btn btn-danger">Excluir</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>   
+    <script>
+        // Esse código vai rodar quando o modal for aberto
+        var myModal = document.getElementById('staticBackdrop');
+        myModal.addEventListener('show.bs.modal', function (event) {
+            // Pega o botão que acionou o modal
+            var button = event.relatedTarget; // O botão que acionou o modal
+            
+            // Pega o ID do produto que foi armazenado no atributo data-id
+            var productId = button.getAttribute('data-id');
+            
+            // Atualiza o link de exclusão no modal com o ID correto
+            var deleteLink = myModal.querySelector('.btn-danger'); // Seleciona o botão de exclusão no modal
+            deleteLink.href = 'clientes_delete.php?id=' + productId; // Atualiza o href com o ID do produto
+        });
+    </script>   
     <script src="assets/bootstrap/bootstrap.bundle.min.js"></script>
 </body>
 </html>

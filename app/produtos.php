@@ -7,7 +7,6 @@ require_once('inc/functions.php');
 
 //lógica e regras de negocio
 $results = api_request('get_all_active_products', 'GET');
-
 //analisar a informacao obtida
 if($results['data']['status'] == 'SUCCESS')
 {
@@ -25,6 +24,7 @@ if($results['data']['status'] == 'SUCCESS')
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>App Consumidora - Produtos</title>
     <link rel="stylesheet" href="assets/bootstrap/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 <body>
 
@@ -42,10 +42,22 @@ if($results['data']['status'] == 'SUCCESS')
                         <a href="produtos_novo.php" class = "btn btn-primary btn-sm">Adicionar produto</a>
                     </div>
                 </div>
-                <?php if(isset($_GET['success']) && $_GET['success'] == 'true') : ?>
-                    <div class="alert alert-success p-2 text-center">
-                        <p>Pruduto excluido com sucesso!</p>
+                <div id="successToast" class="toast align-items-center text-bg-success border-0 position-fixed top-0 end-0 p-3 m-3" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            Produto excluído com sucesso!
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
                     </div>
+                </div>
+                <?php if (isset($_GET['success']) && $_GET['success'] == 'true') : ?>
+                    <script>
+                        // Esse código irá mostrar o toast assim que a página carregar
+                        window.onload = function() {
+                            var toast = new bootstrap.Toast(document.getElementById('successToast'));
+                            toast.show();
+                        };
+                    </script>
                 <?php endif; ?>
                 <?php if(count($produtos) == 0):?>
                     <p class ="text-center">Não existem clientes registrados.</p>
@@ -66,25 +78,10 @@ if($results['data']['status'] == 'SUCCESS')
                                 <td><?= $produto['produto']?></td>
                                 <td class="text-end"><?= $produto['quantidade']?></td>
                                 <td class="d-flex justify-content-center">
-                                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Deletar</button>
-                                    <!-- Modal -->
-                                    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Excluir produto?</h1>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            Deseja realmente excluir o produto <?=$produto['produto']?> ?
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                            <a href="produtos_delete.php?id=<?=$produto['id_produto']?>" class="btn btn-danger">Excluir</a>
-                                        </div>
-                                        </div>
+                                    <div class="btn-group" role="group" aria-label="Basic example">
+                                        <a href="produtos_edit.php?id=<?=$produto['id_produto']?>" class="btn btn-primary bi bi-pencil-square" title="Editar"></a>
+                                        <button type="button" class="btn btn-danger bi bi-trash" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-id="<?= $produto['id_produto'] ?>" title="Excluir"></button>
                                     </div>
-                                    </div> 
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -97,7 +94,40 @@ if($results['data']['status'] == 'SUCCESS')
                 <?php endif ?>
             </div>
         </div>
+        <!-- Modal -->
+        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Excluir Produto?</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Deseja realmente excluir o produto <?=$produto['produto']?> ?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <a href="produtos_delete.php?id=<?=$produto['id_produto']?>" class="btn btn-danger">Excluir</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
+    <script>
+        // Esse código vai rodar quando o modal for aberto
+        var myModal = document.getElementById('staticBackdrop');
+        myModal.addEventListener('show.bs.modal', function (event) {
+            // Pega o botão que acionou o modal
+            var button = event.relatedTarget; // O botão que acionou o modal
+            
+            // Pega o ID do produto que foi armazenado no atributo data-id
+            var productId = button.getAttribute('data-id');
+            
+            // Atualiza o link de exclusão no modal com o ID correto
+            var deleteLink = myModal.querySelector('.btn-danger'); // Seleciona o botão de exclusão no modal
+            deleteLink.href = 'produtos_delete.php?id=' + productId; // Atualiza o href com o ID do produto
+        });
+    </script>
     <script src="assets/bootstrap/bootstrap.bundle.min.js"></script>
 </body>
 </html>

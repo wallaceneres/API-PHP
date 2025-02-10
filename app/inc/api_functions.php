@@ -5,7 +5,13 @@ function api_request($endpoint, $method = 'GET', $variables = [])
 
     //initiate the curl client
     $client = curl_init();
+
+    $headers = array(
+        'Contet-Type: application/json',
+        'Authorization: Basic ' . base64_encode("wallace:teste")
+    );
     
+    curl_setopt($client, CURLOPT_HTTPHEADER, $headers);
     //returns the result as a string
     curl_setopt($client, CURLOPT_RETURNTRANSFER, true);
 
@@ -33,6 +39,8 @@ function api_request($endpoint, $method = 'GET', $variables = [])
     curl_setopt($client, CURLOPT_URL, $url);
 
     $response = curl_exec($client);
+
+    curl_close($client);
 
     return json_decode($response, true);
 
