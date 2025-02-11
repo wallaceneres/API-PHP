@@ -80,7 +80,7 @@ if($results['data']['status'] == 'SUCCESS')
                                 <td class="d-flex justify-content-center">
                                     <div class="btn-group" role="group" aria-label="Basic example">
                                         <a href="produtos_edit.php?id=<?=$produto['id_produto']?>" class="btn btn-primary bi bi-pencil-square" title="Editar"></a>
-                                        <button type="button" class="btn btn-danger bi bi-trash" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-id="<?= $produto['id_produto'] ?>" title="Excluir"></button>
+                                        <button type="button" class="btn btn-danger bi bi-trash" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-id="<?= $produto['id_produto'] ?>" data-nome="<?= htmlspecialchars($produto['produto'], ENT_QUOTES, 'UTF-8') ?>" title="Excluir"></button>
                                     </div>
                                 </td>
                             </tr>
@@ -103,8 +103,9 @@ if($results['data']['status'] == 'SUCCESS')
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        Deseja realmente excluir o produto <?=$produto['produto']?> ?
+                        Deseja realmente excluir o produto <span id="modal-product-name"></span>?
                     </div>
+
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                         <a href="produtos_delete.php?id=<?=$produto['id_produto']?>" class="btn btn-danger">Excluir</a>
@@ -116,17 +117,22 @@ if($results['data']['status'] == 'SUCCESS')
     <script>
         // Esse código vai rodar quando o modal for aberto
         var myModal = document.getElementById('staticBackdrop');
+
         myModal.addEventListener('show.bs.modal', function (event) {
-            // Pega o botão que acionou o modal
             var button = event.relatedTarget; // O botão que acionou o modal
-            
-            // Pega o ID do produto que foi armazenado no atributo data-id
-            var productId = button.getAttribute('data-id');
-            
+
+            var productId = button.getAttribute('data-id'); // Obtém o ID do produto
+            var productName = button.getAttribute('data-nome'); // Obtém o nome do produto
+
             // Atualiza o link de exclusão no modal com o ID correto
-            var deleteLink = myModal.querySelector('.btn-danger'); // Seleciona o botão de exclusão no modal
-            deleteLink.href = 'produtos_delete.php?id=' + productId; // Atualiza o href com o ID do produto
+            var deleteLink = myModal.querySelector('.btn-danger');
+            deleteLink.href = 'produtos_delete.php?id=' + productId;
+
+            // Atualiza o nome do produto no modal
+            var modalProductName = myModal.querySelector('#modal-product-name');
+            modalProductName.textContent = productName;
         });
+
     </script>
     <script src="assets/bootstrap/bootstrap.bundle.min.js"></script>
 </body>

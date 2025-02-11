@@ -45,7 +45,7 @@ if($api_response->get_method() == 'GET')
     $params = $_POST;
 }
 
-$api_logic = new api_logic($api_response->get_endpoint(),   );
+$api_logic = new api_logic($api_response->get_endpoint(), $params);
 
 //check if endpoint exists
 if(!$api_logic->endpoint_exists())

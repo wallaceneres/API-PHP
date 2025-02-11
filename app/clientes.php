@@ -14,8 +14,6 @@ $results = api_request('get_all_clients', 'GET',[
     'limit' => $limit
 ]);
 
-// var_dump($page);
-// die(1);
 //analisar a informacao obtida
 if($results['data']['status'] == 'SUCCESS')
 {
@@ -108,7 +106,7 @@ $totalPages = ceil($totalClients / $limit);
                                 <td class="d-flex justify-content-center">
                                     <div class="btn-group" role="group" aria-label="Basic example">
                                         <a href="clientes_edit.php?id=<?=$cliente['id_cliente']?>" class="btn btn-primary bi bi-pencil-square" title="Editar"></a>
-                                        <button type="button" class="btn btn-danger bi bi-trash" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-id="<?= $cliente['id_cliente'] ?>" title="Excluir"></button>
+                                        <button type="button" class="btn btn-danger bi bi-trash" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-id="<?= $cliente['id_cliente'] ?>" data-nome="<?= htmlspecialchars($cliente['nome'], ENT_QUOTES, 'UTF-8') ?>" title="Excluir"></button>
                                     </div>
                                 </td>
                             </tr>
@@ -117,6 +115,25 @@ $totalPages = ceil($totalClients / $limit);
                 </table>
 
                 <p class="text-end">Total: <strong><?= $totalClients ?></strong></p>
+
+                <!-- Modal -->
+                <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="staticBackdropLabel">Excluir Usuário?</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                Deseja realmente excluir o produto <span id="modal-product-name"></span>?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                <a href="clientes_delete.php?id=<?=$cliente['id_cliente']?>" class="btn btn-danger">Excluir</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>            
 
                 <!-- Navegação de Paginação -->
                 <nav aria-label="Navegação de páginas">
@@ -142,42 +159,27 @@ $totalPages = ceil($totalClients / $limit);
                 <?php endif ?>
             </div>
         </div>
-
-
-        <!-- Modal -->
-        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Excluir Usuário?</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        Deseja realmente excluir o usuário <?=$cliente['nome']?> ?
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <a href="clientes_delete.php?id=<?=$cliente['id_cliente']?>" class="btn btn-danger">Excluir</a>
-                    </div>
-                </div>
-            </div>
-        </div>
     </section>   
     <script>
         // Esse código vai rodar quando o modal for aberto
         var myModal = document.getElementById('staticBackdrop');
+
         myModal.addEventListener('show.bs.modal', function (event) {
-            // Pega o botão que acionou o modal
             var button = event.relatedTarget; // O botão que acionou o modal
-            
-            // Pega o ID do produto que foi armazenado no atributo data-id
-            var productId = button.getAttribute('data-id');
-            
+
+            var productId = button.getAttribute('data-id'); // Obtém o ID do produto
+            var productName = button.getAttribute('data-nome'); // Obtém o nome do produto
+
             // Atualiza o link de exclusão no modal com o ID correto
-            var deleteLink = myModal.querySelector('.btn-danger'); // Seleciona o botão de exclusão no modal
-            deleteLink.href = 'clientes_delete.php?id=' + productId; // Atualiza o href com o ID do produto
+            var deleteLink = myModal.querySelector('.btn-danger');
+            deleteLink.href = 'clientes_delete.php?id=' + productId;
+
+            // Atualiza o nome do produto no modal
+            var modalProductName = myModal.querySelector('#modal-product-name');
+            modalProductName.textContent = productName;
         });
-    </script>   
+
+    </script>
     <script src="assets/bootstrap/bootstrap.bundle.min.js"></script>
 </body>
 </html>
