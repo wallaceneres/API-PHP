@@ -5,16 +5,26 @@ require_once('inc/config.php');
 require_once('inc/api_functions.php');
 require_once('inc/functions.php');
 
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$limit = isset($_GET['limit']) && $_GET['limit'] > 0 ? (int)$_GET['limit'] : 10;
+
 //lógica e regras de negocio
-$results = api_request('get_all_active_products', 'GET');
+$results = api_request('get_all_active_products', 'GET',[
+    'page' => $page,
+    'limit' => $limit
+]);
 //analisar a informacao obtida
 if($results['data']['status'] == 'SUCCESS')
 {
     $produtos = $results['data']['results'];
+    $totalProducts = $results['data']['total'];
 }else
 {
     $produtos = [];
+    $totalProducts = 0;
 }
+
+$totalPages = ceil($totalProducts / $limit);
 ?>
 
 <!DOCTYPE html>
@@ -91,6 +101,44 @@ if($results['data']['status'] == 'SUCCESS')
                 </table>
 
                 <p class="text-end">Total: <strong><?= count($produtos) ?></strong></p>
+
+                <!-- Paginação -->
+                <nav aria-label="Navegação de páginas">
+                    <ul class="pagination justify-content-center">
+                        <!-- Botão Primeira Página -->
+                        <li class="page-item <?= $page <= 1 ? 'disabled' : '' ?>">
+                            <a class="page-link" href="?page=1&limit=<?= $limit ?>">Primeira</a>
+                        </li>
+
+                        <!-- Botão Anterior -->
+                        <li class="page-item <?= $page <= 1 ? 'disabled' : '' ?>">
+                            <a class="page-link" href="?page=<?= $page - 1 ?>&limit=<?= $limit ?>" tabindex="-1">Anterior</a>
+                        </li>
+
+                        <!-- Páginas (com até 5 páginas ao redor da página atual) -->
+                        <?php
+                            // Definir o intervalo de páginas a exibir (2 antes e 2 depois da página atual)
+                            $startPage = max(1, $page - 2);
+                            $endPage = min($totalPages, $page + 2);
+                            
+                            for ($i = $startPage; $i <= $endPage; $i++) :
+                        ?>
+                            <li class="page-item <?= $i == $page ? 'active' : '' ?>">
+                                <a class="page-link" href="?page=<?= $i ?>&limit=<?= $limit ?>"><?= $i ?></a>
+                            </li>
+                        <?php endfor; ?>
+
+                        <!-- Botão Próxima -->
+                        <li class="page-item <?= $page >= $totalPages ? 'disabled' : '' ?>">
+                            <a class="page-link" href="?page=<?= $page + 1 ?>&limit=<?= $limit ?>">Próxima</a>
+                        </li>
+
+                        <!-- Botão Última Página -->
+                        <li class="page-item <?= $page >= $totalPages ? 'disabled' : '' ?>">
+                            <a class="page-link" href="?page=<?= $totalPages ?>&limit=<?= $limit ?>">Última</a>
+                        </li>
+                    </ul>
+                </nav>
                 <?php endif ?>
             </div>
         </div>

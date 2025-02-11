@@ -1,5 +1,7 @@
 <?php
 
+require_once('paginator.php');
+
 class api_logic
 {
 
@@ -64,74 +66,17 @@ class api_logic
 
     public function get_all_clients()
     {
-
-        $db = new database();
-
-        $query = "SELECT * FROM clientes WHERE 1 ORDER BY nome";
-
-        $page = isset($_GET['page']) && (int)$_GET['page'] > 0 ? (int)$_GET['page'] : 1; // Se 0 ou não estiver definido, define como 1
-        $limit = isset($_GET['limit']) && (int)$_GET['limit'] > 0 ? min((int)$_GET['limit'], 100) : 10; // Se 0 ou não estiver definido, define como 10 (máximo 100)
-
-        $query .= " LIMIT " . $limit;
-
-        $offset = ($page - 1) * $limit;
-
-        /*
-            Página   | Fórmula (page - 1) * limit | OFFSET resultante | Registros exibidos
-            -----------------------------------------------------------------------------
-            1        | (1 - 1) * 10 = 0           | 0                  | 1 - 10
-            2        | (2 - 1) * 10 = 10          | 10                 | 11 - 20
-            3        | (3 - 1) * 10 = 20          | 20                 | 21 - 30
-            4        | (4 - 1) * 10 = 30          | 30                 | 31 - 40
-            5        | (5 - 1) * 10 = 40          | 40                 | 41 - 50
-        */
-
-        $query .= " OFFSET " . $offset;
-
-        $results = $db->EXE_QUERY("$query");
-
-        $queryTotalClients = "SELECT count(*) AS total FROM clientes";
-        $totalClients = $db->EXE_QUERY("$queryTotalClients")[0]['total'];
-
-        $totalPages = ceil($totalClients/$limit);
-        
-
-        return [
-            'status' => 'SUCCESS',
-            'message' => '',
-            'total' => $totalClients,
-            'pagina' => $page,
-            'paginas' => $totalPages,
-            'results' => $results
-        ];
+        return Paginator::get_paginated_results("SELECT * FROM clientes", "ORDER BY nome", "clientes");
     }
 
     public function get_all_active_clients()
     {
-
-        $db = new database();
-
-        $results = $db->EXE_QUERY("SELECT * FROM clientes where deleted_at is null");
-
-        return [
-            'status' => 'SUCCESS',
-            'message' => '',
-            'results' => $results
-        ];
+        return Paginator::get_paginated_results("SELECT * FROM clientes", "WHERE deleted_at IS NULL ORDER BY nome", "clientes");
     }
 
     public function get_all_inactive_clients()
     {
-
-        $db = new database();
-
-        $results = $db->EXE_QUERY("SELECT * FROM clientes where deleted_at is not null");
-
-        return [
-            'status' => 'SUCCESS',
-            'message' => '',
-            'results' => $results
-        ];
+        return Paginator::get_paginated_results("SELECT * FROM clientes", "WHERE deleted_at IS NOT NULL ORDER BY nome", "clientes");
     }
 
     public function get_client()
@@ -168,30 +113,12 @@ class api_logic
     
     public function get_all_products()
     {
-
-        $db = new database();
-
-        $results = $db->EXE_QUERY("SELECT * FROM produtos WHERE 1");
-
-        return [
-            'status' => 'SUCCESS',
-            'message' => '',
-            'results' => $results
-        ];
+        return Paginator::get_paginated_results("SELECT * FROM produtos", "ORDER BY produto", "produtos");
     }
 
     public function get_all_active_products()
     {
-
-        $db = new database();
-
-        $results = $db->EXE_QUERY("SELECT * FROM produtos where deleted_at is null");
-
-        return [
-            'status' => 'SUCCESS',
-            'message' => '',
-            'results' => $results
-        ];
+        return Paginator::get_paginated_results("SELECT * FROM produtos", "WHERE deleted_at IS NULL ORDER BY produto", "produtos");
     }
 
     public function get_all_inactive_products()
@@ -211,15 +138,7 @@ class api_logic
     public function get_all_products_without_stock()
     {
         //returns all products with stock <= 0 in the database
-        $db = new database();
-
-        $results = $db->EXE_QUERY("SELECT * FROM produtos WHERE deleted_at IS NULL AND quantidade <=0");
-
-        return [
-            'status' => 'SUCCESS',
-            'message' => '',
-            'results' => $results
-        ];
+        return Paginator::get_paginated_results("SELECT * FROM produtos", "WHERE deleted_at IS NULL AND quantidade <= 0 ORDER BY produto", "produtos");
     }
 
     public function create_new_client()
