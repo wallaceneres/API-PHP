@@ -11,8 +11,8 @@ require_once(dirname(__FILE__) . '/inc/database.php');
 
 $api_response = new api_response();
 
-$user = $_SERVER['PHP_AUTH_USER'];
-$password = $_SERVER['PHP_AUTH_PW'];
+$user = $_SERVER['PHP_AUTH_USER'] ?? null;
+$password = $_SERVER['PHP_AUTH_PW'] ?? null;
 
 if(!$api_response->isUserAuthorized($user, $password))
 {
