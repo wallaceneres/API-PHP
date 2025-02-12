@@ -6,9 +6,12 @@ function api_request($endpoint, $method = 'GET', $variables = [])
     //initiate the curl client
     $client = curl_init();
 
+    $api_username = API_USERNAME;
+    $api_password = API_PASSWORD;
+
     $headers = array(
         'Contet-Type: application/json',
-        'Authorization: Basic ' . base64_encode("wallace:teste")
+        'Authorization: Basic ' . base64_encode("$api_username:$api_password")
     );
     
     curl_setopt($client, CURLOPT_HTTPHEADER, $headers);

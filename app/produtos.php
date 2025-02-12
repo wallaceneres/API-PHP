@@ -72,8 +72,20 @@ $totalPages = ceil($totalProducts / $limit);
                 <?php if(count($produtos) == 0):?>
                     <p class ="text-center">Não existem clientes registrados.</p>
                 <?php else :?>
-
-
+                    <form action="" method="GET" class="mb-3">
+                        <div class="row">
+                            <div class="col-auto">
+                                <label for="limit" class="form-label">Resultados por página:</label>
+                            </div>
+                            <div class="col-auto">
+                                <select id="limit" name="limit" class="form-select" onchange="this.form.submit()">
+                                    <option value="10" <?= (isset($_GET['limit']) && $_GET['limit'] == 10) ? 'selected' : ''; ?>>10</option>
+                                    <option value="25" <?= (isset($_GET['limit']) && $_GET['limit'] == 25) ? 'selected' : ''; ?>>25</option>
+                                    <option value="50" <?= (isset($_GET['limit']) && $_GET['limit'] == 50) ? 'selected' : ''; ?>>50</option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
                 <table class ="table table-striped table-bordered">
                     <thead class="table-dark">
                         <tr>

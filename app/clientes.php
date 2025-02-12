@@ -86,33 +86,34 @@ $totalPages = ceil($totalClients / $limit);
                             </div>
                         </div>
                     </form>
-
-                <table class ="table table-striped table-bordered">
-                    <thead class="table-dark">
-                        <tr>
-                            <th>Nome</th>
-                            <th>Email</th>
-                            <th>Telefone</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody class="table-striped-columns">
-                        <?php foreach($clientes as $cliente): ?>
+                <div class="table-responsive">
+                    <table class ="table table-striped table-bordered">
+                        <thead class="table-dark">
                             <tr>
-                                <td><?= $cliente['nome']?></td>
-                                <td><?= $cliente['email']?></td>
-                                <td><?= $cliente['telefone']?></td>
-                                
-                                <td class="d-flex justify-content-center">
-                                    <div class="btn-group" role="group" aria-label="Basic example">
-                                        <a href="clientes_edit.php?id=<?=$cliente['id_cliente']?>" class="btn btn-primary bi bi-pencil-square" title="Editar"></a>
-                                        <button type="button" class="btn btn-danger bi bi-trash" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-id="<?= $cliente['id_cliente'] ?>" data-nome="<?= htmlspecialchars($cliente['nome'], ENT_QUOTES, 'UTF-8') ?>" title="Excluir"></button>
-                                    </div>
-                                </td>
+                                <th>Nome</th>
+                                <th>Email</th>
+                                <th>Telefone</th>
+                                <th></th>
                             </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody class="table-striped-columns">
+                            <?php foreach($clientes as $cliente): ?>
+                                <tr>
+                                    <td><?= $cliente['nome']?></td>
+                                    <td><?= $cliente['email']?></td>
+                                    <td><?= $cliente['telefone']?></td>
+                                    
+                                    <td class="d-flex justify-content-center">
+                                        <div class="btn-group" role="group" aria-label="Basic example">
+                                            <a href="clientes_edit.php?id=<?=$cliente['id_cliente']?>" class="btn btn-primary bi bi-pencil-square" title="Editar"></a>
+                                            <button type="button" class="btn btn-danger bi bi-trash" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-id="<?= $cliente['id_cliente'] ?>" data-nome="<?= htmlspecialchars($cliente['nome'], ENT_QUOTES, 'UTF-8') ?>" title="Excluir"></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
 
                 <p class="text-end">Total: <strong><?= $totalClients ?></strong></p>
 
@@ -125,7 +126,7 @@ $totalPages = ceil($totalClients / $limit);
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                Deseja realmente excluir o produto <span id="modal-product-name"></span>?
+                                Deseja realmente excluir o cliente <span id="modal-product-name"></span>?
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
